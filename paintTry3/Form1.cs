@@ -64,8 +64,6 @@ namespace paintTry3
                 _painter.Text = tb.Text;
                 this.panel1.Controls.Add(tb);
             }
-
-            
         }
 
         private void panel1_MouseMove(object sender, MouseEventArgs e)
@@ -74,23 +72,10 @@ namespace paintTry3
             {
                 _painter.End = e.Location;
 
-                if (_painter.State == "free")
-                    this._painter.Curve.Add(e.Location);
-
-                if (_painter.State == "erase")
-                {
-                    this._painter.Pen.Color = _painter.BackColor;
-                    this._painter.Curve.Add(e.Location);
-
-                    //_painter.DrawCurve();
-                }
-
+                if (_painter.State == "free" || _painter.State == "erase")
+                    _painter.Curve.Add(e.Location);
 
                 _painter.Preview(panel1.CreateGraphics(), _painter.IsShift);
-
-
-                // if (_state == "free" || _state == "erase")
-                //     _painter.Curve.Add(e.Location);
             }
         }
 

@@ -189,6 +189,10 @@ namespace paintTry3
                     for (int i = 0; i < Curve.Count - 1; i++)
                         g.DrawLine(Pen, Curve.ElementAt(i), Curve.ElementAt(i + 1));
                     break;
+                case "erase":
+                    for (int i = 0; i < Curve.Count - 1; i++)
+                        g.DrawLine(Pen, Curve.ElementAt(i), Curve.ElementAt(i + 1));
+                    break;
                 case "text":
                     g.DrawString(Text, new Font("Arial", 12, FontStyle.Bold, GraphicsUnit.Point),
                         new SolidBrush(Pen.Color), Beg.X, Beg.Y);
