@@ -65,11 +65,7 @@ namespace paintTry3
                 this.panel1.Controls.Add(tb);
             }
 
-            if (_painter.State == "Leminiscate")
-            {
-                Lemniscate l = new Lemniscate { Origin = e.Location };
-                l.Draw(panel1.CreateGraphics());
-            }
+            
         }
 
         private void panel1_MouseMove(object sender, MouseEventArgs e)
