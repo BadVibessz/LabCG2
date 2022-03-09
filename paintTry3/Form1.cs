@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace paintTry3
@@ -8,12 +9,15 @@ namespace paintTry3
     {
         private Painter _painter;
         private Size _oldFormlSize;
+        private RedoUndoManager _rum; //todo: maybe store Image instead of Painter
 
         public Form1()
         {
             InitializeComponent();
 
+
             _painter = new Painter(this.panel1.Size);
+            this._rum = new RedoUndoManager(_painter);
             this._oldFormlSize = this.Size;
             this.KeyPreview = true;
             this.foreBtn.BackColor = _painter.ForeColor;
@@ -40,12 +44,6 @@ namespace paintTry3
             _painter.IsPainting = true;
             _painter.Beg = e.Location;
             this._painter.Curve.Add(e.Location);
-            // if (_state == "free" || _state == "erase")
-            // {
-            //     _painter.Curve.Add(e.Location);
-            //     //_painter.Curve = _painter.Curve;
-            // }
-
 
             if (e.Button == MouseButtons.Left)
                 _painter.Pen.Color = this._painter.ForeColor;
@@ -75,12 +73,24 @@ namespace paintTry3
                 if (_painter.State == "free" || _painter.State == "erase")
                     _painter.Curve.Add(e.Location);
 
-                _painter.Preview(panel1.CreateGraphics(), _painter.IsShift);
+                _painter.Preview(panel1.CreateGraphics());
             }
         }
 
         private void panel1_MouseUp(object sender, MouseEventArgs e)
         {
+            if (_painter.IsPainting)
+            {
+                this._rum.Buffer.Add(this._painter.Image);
+                
+                _painter.PaintVoid();
+
+                this._painter.Curve.Clear();
+                _painter.End = e.Location;
+
+                
+            }
+
             _painter.IsPainting = false;
 
             if (_painter.State == "pipette")
@@ -91,12 +101,6 @@ namespace paintTry3
                 _painter.State = "free";
             }
 
-            //if (_painter.State == "free" || _painter.State == "erase") _painter.Curve.Add(e.Location);
-            _painter.End = e.Location;
-
-
-            _painter.PaintVoid(_painter.IsShift);
-            this._painter.Curve.Clear();
             panel1.Update();
         }
 
@@ -139,12 +143,32 @@ namespace paintTry3
                     if (this._painter.State == "text")
                     {
                         _painter.Text = this.panel1.Controls[this.panel1.Controls.Count - 1].Text;
-                        _painter.PaintVoid(_painter.IsShift);
+                        _painter.PaintVoid();
                         this.panel1.Controls.RemoveAt(panel1.Controls.Count - 1);
                         this._painter.State = "free";
                     }
 
                     break;
+            }
+
+            // CTRL
+            if (e.Modifiers == Keys.Control)
+            {
+                switch (e.KeyCode)
+                {
+                    case Keys.Z:
+                        this._rum.Painter = this._painter;
+                        this._rum.Undo();
+                        //this._painter.Image = this._rum.Buffer.ElementAt(_rum.Buffer.Count-1);
+                        this.panel1.Refresh();
+                        break;
+                    case Keys.S:
+                        new SaveOpenManager(this._painter).Save();
+                        break;
+                    case Keys.O:
+                        new SaveOpenManager(this._painter).Open(this.panel1.Size);
+                        break;
+                }
             }
         }
 
@@ -170,10 +194,8 @@ namespace paintTry3
             this.foreBtn.BackColor = _painter.ForeColor;
         }
 
-        //todo:
         private void Form1_Resize(object sender, EventArgs e)
         {
-            var x = this.Size;
         }
 
         private void arrowBtn_Click(object sender, EventArgs e)
@@ -181,13 +203,13 @@ namespace paintTry3
             this._painter.State = "arrow";
         }
 
-        private void panel1_Resize(object sender, EventArgs e) //todo:
+        private void panel1_Resize(object sender, EventArgs e)
         {
             if (_painter == null)
                 _painter = new Painter(this.panel1.Size);
-            if (Size.Height < _oldFormlSize.Height || Size.Width < _oldFormlSize.Width) // 1024 x 768 WHY??
+            if (Size.Height < _oldFormlSize.Height || Size.Width < _oldFormlSize.Width)
                 return;
-            this._painter.Size = panel1.Size; // nullexception
+            this._painter.Size = panel1.Size;
         }
 
         private void eraseBtn_Click_1(object sender, EventArgs e)
@@ -254,25 +276,19 @@ namespace paintTry3
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Size oldSize = this.panel1.Size;
-            var dialog = new OpenFileDialog { Filter = "Image (*.jpg)|*.jpg|Image (*.png)|*.png" };
-            dialog.ShowDialog();
-
-            var img = Image.FromFile(dialog.FileName);
-            this._painter.Image = (Bitmap)img;
-            this._painter.Size = oldSize;
-
+            SaveOpenManager s = new SaveOpenManager(this._painter);
+            s.Open(this.panel1.Size);
+            this._painter.Image = s.Painter.Image;
+            var img = this._painter.Image;
 
             int width = 0, height = 0;
             if (panel1.Size.Width < img.Size.Width)
-            {
                 width = img.Size.Width;
-            }
+
 
             if (panel1.Size.Height < img.Size.Height)
-            {
                 height = img.Size.Height;
-            }
+
 
             if (width != 0 || height != 0)
             {
@@ -280,19 +296,18 @@ namespace paintTry3
                 this._painter.Size = img.Size;
             }
 
-
             this.panel1.Refresh();
         }
 
 
         private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this._painter.Save();
+            new SaveOpenManager(this._painter).Save();
         }
 
         private void сохранитьКакToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this._painter.SaveAs();
+            new SaveOpenManager(this._painter).SaveAs();
         }
 
 
