@@ -16,11 +16,6 @@ namespace paintTry3
                 new Point(origin.X + width, origin.Y),
                 new Point(origin.X + width / 2, origin.Y + height / 2)
             };
-            
-            // Point a = origin;
-            // Point b = new Point(origin.X + width / 2, origin.Y - height / 2);
-            // Point c = new Point(origin.X + width, origin.Y);
-            // Point d = new Point(origin.X + width / 2, origin.Y + height / 2);
         }
 
         public void Draw(Graphics g, Pen pen)

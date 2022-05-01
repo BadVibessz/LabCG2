@@ -14,7 +14,8 @@ namespace paintTry3
         private Bitmap _img;
         private Size _imgSize;
         private Graphics _graphics;
-        public int Id;
+        private bool _preview = false;
+        public int Id; //todo: delete
 
         public bool IsSaved = false;
         public string SavedPath;
@@ -44,9 +45,8 @@ namespace paintTry3
             get => this._img;
             set
             {
-                this._graphics = Graphics.FromImage(value);
-                if (value != null)
-                    _graphics.DrawImage(value, 0, 0);
+                //this._graphics.Dispose();
+                this._graphics = Graphics.FromImage(value); //todo
                 this._img = new Bitmap(value);
             }
         }
@@ -139,6 +139,9 @@ namespace paintTry3
 
         private void Paint(Graphics g)
         {
+            // if (!_preview)
+            //     new PaintCommand(this, _graphics).Execute(null);
+
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             Pen.EndCap = LineCap.Round;
             switch (State)
@@ -209,6 +212,7 @@ namespace paintTry3
                     }
                     else
                         g.DrawLine(r, Beg, End);
+
                     break;
 
                 case "line":
@@ -225,13 +229,13 @@ namespace paintTry3
 
                     break;
             }
-
-
-            Bitmap b = new Bitmap(_imgSize.Width, _imgSize.Height, g);
+            
+            this._preview = false;
         }
 
         public void Preview(Graphics g)
         {
+            this._preview = true;
             BufferedGraphics bg = BufferedGraphicsManager.Current.Allocate(g, Rectangle.Round(g.VisibleClipBounds));
             bg.Graphics.DrawImage(_img, 0, 0);
             Paint(bg.Graphics);

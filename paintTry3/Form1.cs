@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -58,10 +59,18 @@ namespace paintTry3
 
             if (_painter.State == "text")
             {
-                var tb = new TextBox() { Name = "textbox", Location = e.Location, };
+                var tb = new TextBox() { Name = "textbox", Location = e.Location};
                 _painter.Text = tb.Text;
                 this.panel1.Controls.Add(tb);
             }
+
+            if (_painter.State == "fill")
+            {
+               new FillCommand(e.Location, _painter.Image, _painter.Pen.Color).Execute(null);
+               panel1.Refresh();
+            }
+                
+            
         }
 
         private void panel1_MouseMove(object sender, MouseEventArgs e)
@@ -84,7 +93,7 @@ namespace paintTry3
                 this._rum.Buffer.Add(this._painter.Image);
                 
                 _painter.PaintVoid();
-
+                
                 this._painter.Curve.Clear();
                 _painter.End = e.Location;
 
@@ -157,8 +166,9 @@ namespace paintTry3
                 switch (e.KeyCode)
                 {
                     case Keys.Z:
-                        this._rum.Painter = this._painter;
+                        this._rum.Painter = this._painter; //TODO: ломаются Image в Buffer после открытия Файла??????
                         this._rum.Undo();
+                        
                         //this._painter.Image = this._rum.Buffer.ElementAt(_rum.Buffer.Count-1);
                         this.panel1.Refresh();
                         break;
@@ -167,6 +177,7 @@ namespace paintTry3
                         break;
                     case Keys.O:
                         new SaveOpenManager(this._painter).Open(this.panel1.Size);
+                        this.panel1.Refresh();
                         break;
                 }
             }
@@ -295,7 +306,8 @@ namespace paintTry3
                 this.panel1.Size = img.Size;
                 this._painter.Size = img.Size;
             }
-
+            this._rum.Buffer.Add(this._painter.Image);
+            
             this.panel1.Refresh();
         }
 
@@ -326,6 +338,11 @@ namespace paintTry3
         private void button1_Click_1(object sender, EventArgs e)
         {
             _painter.State = "rhombus";
+        }
+
+        private void fillBtn_Click(object sender, EventArgs e)
+        {
+            this._painter.State = "fill";
         }
     }
 }

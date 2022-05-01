@@ -83,6 +83,7 @@ namespace paintTry3
             this.сохранитьКакToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.clearBtn = new System.Windows.Forms.Button();
+            this.fillBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -686,6 +687,19 @@ namespace paintTry3
             this.clearBtn.UseVisualStyleBackColor = false;
             this.clearBtn.Click += new System.EventHandler(this.clearBtn_Click);
             // 
+            // fillBtn
+            // 
+            this.fillBtn.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("fillBtn.BackgroundImage")));
+            this.fillBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.fillBtn.FlatAppearance.BorderSize = 0;
+            this.fillBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.fillBtn.Location = new System.Drawing.Point(365, 36);
+            this.fillBtn.Name = "fillBtn";
+            this.fillBtn.Size = new System.Drawing.Size(32, 29);
+            this.fillBtn.TabIndex = 23;
+            this.fillBtn.UseVisualStyleBackColor = true;
+            this.fillBtn.Click += new System.EventHandler(this.fillBtn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -693,6 +707,7 @@ namespace paintTry3
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(1902, 1033);
+            this.Controls.Add(this.fillBtn);
             this.Controls.Add(this.clearBtn);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.label5);
@@ -729,6 +744,8 @@ namespace paintTry3
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.Button fillBtn;
 
         private System.Windows.Forms.Button rhombusBtn;
 
