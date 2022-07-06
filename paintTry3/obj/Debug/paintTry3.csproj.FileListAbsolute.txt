@@ -8,3 +8,7 @@ C:\Users\danil\source\repos\paintTry3\paintTry3\obj\Debug\paintTry3.csproj.CoreC
 C:\Users\danil\source\repos\paintTry3\paintTry3\obj\Debug\paintTry3.exe
 C:\Users\danil\source\repos\paintTry3\paintTry3\obj\Debug\paintTry3.pdb
 C:\Users\danil\source\repos\paintTry3\paintTry3\obj\Debug\paintTry3.Form1.resources
+C:\Users\danil\source\repos\paintTry3\paintTry3\bin\Debug\paintTry3.exe.manifest
+C:\Users\danil\source\repos\paintTry3\paintTry3\bin\Debug\paintTry3.application
+C:\Users\danil\source\repos\paintTry3\paintTry3\obj\Debug\paintTry3.exe.manifest
+C:\Users\danil\source\repos\paintTry3\paintTry3\obj\Debug\paintTry3.application
